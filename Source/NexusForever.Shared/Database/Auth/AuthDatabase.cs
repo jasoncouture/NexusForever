@@ -11,6 +11,10 @@ namespace NexusForever.Shared.Database.Auth
 {
     public static class AuthDatabase
     {
+        public static void Initialise()
+        {
+            ContextManager.Initialise<AuthContext>(DatabaseManager.Config);
+        }
         /// <summary>
         /// Selects an <see cref="Account"/> asynchronously that matches the supplied email.
         /// </summary>

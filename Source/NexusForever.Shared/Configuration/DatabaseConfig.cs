@@ -12,6 +12,8 @@ namespace NexusForever.Shared.Configuration
         [JsonConverter(typeof(ConnectionStringConverter))]
         public IConnectionString World { get; set; }
 
+        public bool MigrateToLatestVersion { get; set; } = false;
+        public bool SeedDatabase { get; set; } = false;
 
         IConnectionString IDatabaseConfiguration.GetConnectionString(DatabaseType type)
         {

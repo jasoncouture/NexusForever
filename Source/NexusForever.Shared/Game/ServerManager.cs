@@ -26,6 +26,7 @@ namespace NexusForever.Shared.Game
 
         public static void Initialise()
         {
+            AuthDatabase.Initialise();
             Servers = AuthDatabase.GetServers()
                 .Select(s => new ServerInfo(s))
                 .ToImmutableList();

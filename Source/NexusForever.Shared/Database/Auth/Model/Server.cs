@@ -8,11 +8,15 @@ namespace NexusForever.Shared.Database.Auth.Model
     [Table("server")]
     public partial class Server
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("id")]
         public byte Id { get; set; }
-        [StringLength(64), Column("name")]
+        [StringLength(64)]
+        [Column("name")]
         public string Name { get; set; }
-        [StringLength(64), Column("host")]
+        [StringLength(64)]
+        [Column("host")]
         public string Host { get; set; }
         [Column("port")]
         public ushort Port { get; set; }
