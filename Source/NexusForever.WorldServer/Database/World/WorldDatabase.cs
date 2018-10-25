@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using NexusForever.Shared.Database;
 using NexusForever.WorldServer.Database.World.Model;
 
 namespace NexusForever.WorldServer.Database.World
@@ -37,6 +38,11 @@ namespace NexusForever.WorldServer.Database.World
                 return context.EntityVendorItem
                     .AsNoTracking()
                     .ToImmutableList();
+        }
+
+        public static void Initialise()
+        {
+            ContextManager.Initialise<WorldContext>(DatabaseManager.Config);
         }
     }
 }

@@ -4,16 +4,13 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
-using NexusForever.Shared.Database.Auth.Model;
 
-namespace NexusForever.Shared.Database.Auth.Migrations
+namespace NexusForever.Shared.Database.Auth.Model.Migrations
 {
     [DbContext(typeof(AuthContext))]
-    [Migration("20181024212728_InitialCreate")]
-    partial class InitialCreate
+    partial class AuthContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

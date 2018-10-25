@@ -2,22 +2,11 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace NexusForever.Shared.Database.Auth.Migrations
+namespace NexusForever.Shared.Database.Auth.Model.Migrations
 {
     public partial class InitialCreate : Migration
     {
-        private string GetDateTimeNowValueForProvider(string provider)
-        {
-            switch (provider)
-            {
-                    case "Pomelo.EntityFrameworkCore.MySql":
-                        return "CURRENT_TIMESTAMP";
-                    case "Microsoft.EntityFrameworkCore.SqlServer":
-                        return "SYSDATETIME()";
-                    default:
-                        return "NOW()";
-            }
-        }
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -30,7 +19,7 @@ namespace NexusForever.Shared.Database.Auth.Migrations
                     v = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: false, defaultValueSql: "''"),
                     gameToken = table.Column<string>(type: "varchar(32)", maxLength: 32, nullable: false, defaultValueSql: "''"),
                     sessionKey = table.Column<string>(type: "varchar(32)", maxLength: 32, nullable: false, defaultValueSql: "''"),
-                    createTime = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: GetDateTimeNowValueForProvider(migrationBuilder.ActiveProvider))
+                    createTime = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: migrationBuilder.IsMySql() ? "CURRENT_TIMESTAMP" : "SYSDATETIME()")
                 },
                 constraints: table =>
                 {

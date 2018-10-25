@@ -2,14 +2,21 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using NexusForever.Shared.Database;
 using NexusForever.WorldServer.Database.Character.Model;
 using NexusForever.WorldServer.Game.Entity;
 using ItemEntity = NexusForever.WorldServer.Game.Entity.Item;
 
 namespace NexusForever.WorldServer.Database.Character
 {
+
     public static class CharacterDatabase
     {
+        public static void Initialise()
+        {
+            ContextManager.Initialise<CharacterContext>(DatabaseManager.Config);
+        }
         public static ulong GetNextCharacterId()
         {
             using (var context = new CharacterContext())

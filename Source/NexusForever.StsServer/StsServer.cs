@@ -5,6 +5,7 @@ using NLog;
 using NexusForever.Shared;
 using NexusForever.Shared.Configuration;
 using NexusForever.Shared.Database;
+using NexusForever.Shared.Database.Auth;
 using NexusForever.Shared.Network;
 using NexusForever.StsServer.Network;
 using NexusForever.StsServer.Network.Message;
@@ -31,6 +32,7 @@ namespace NexusForever.StsServer
             ConfigurationManager<StsServerConfiguration>.Initialise("StsServer.json");
 
             DatabaseManager.Initialise(ConfigurationManager<StsServerConfiguration>.Config.Database);
+            AuthDatabase.Initialise();
             MessageManager.Initialise();
             NetworkManager<StsSession>.Initialise(ConfigurationManager<StsServerConfiguration>.Config.Network);
 

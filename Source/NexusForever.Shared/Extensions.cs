@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using NexusForever.Shared.Configuration;
 
 namespace NexusForever.Shared
@@ -35,6 +36,18 @@ namespace NexusForever.Shared
             }
 
             return optionsBuilder;
+        }
+
+        private const string MySqlProvider = "Pomelo.EntityFrameworkCore.MySql";
+        private const string MicrosoftSqlProvider = "Microsoft.EntityFrameworkCore.SqlServer";
+        public static bool IsMySql(this MigrationBuilder migrationBuilder)
+        {
+            return string.Equals(migrationBuilder.ActiveProvider, MySqlProvider, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static bool IsMicrosoftSql(this MigrationBuilder migrationBuilder)
+        {
+            return string.Equals(migrationBuilder.ActiveProvider, MicrosoftSqlProvider, StringComparison.OrdinalIgnoreCase);
         }
     }
 

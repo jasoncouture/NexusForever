@@ -5,11 +5,14 @@ using NLog;
 using NexusForever.Shared;
 using NexusForever.Shared.Configuration;
 using NexusForever.Shared.Database;
+using NexusForever.Shared.Database.Auth;
 using NexusForever.Shared.Game;
 using NexusForever.Shared.GameTable;
 using NexusForever.Shared.Network;
 using NexusForever.Shared.Network.Message;
 using NexusForever.WorldServer.Command;
+using NexusForever.WorldServer.Database.Character;
+using NexusForever.WorldServer.Database.World;
 using NexusForever.WorldServer.Game;
 using NexusForever.WorldServer.Game.Entity;
 using NexusForever.WorldServer.Game.Entity.Network;
@@ -40,7 +43,10 @@ namespace NexusForever.WorldServer
             DatabaseManager.Initialise(ConfigurationManager<WorldServerConfiguration>.Config.Database);
 
             GameTableManager.Initialise();
-
+            // We could make startup faster if we did Parallel.Invoke() here.
+            AuthDatabase.Initialise();
+            CharacterDatabase.Initialise();
+            WorldDatabase.Initialise();
             EntityManager.Initialise();
             EntityCommandManager.Initialise();
 

@@ -56,6 +56,7 @@ namespace NexusForever.Shared.Database.Auth
 
                 context.Account.Add(new Account
                 {
+                    Id = context.Account.Any() ? context.Account.Max(i => i.Id) : (uint)1,
                     Email = email,
                     S     = s.ToHexString(),
                     V     = v.ToHexString()
