@@ -8,8 +8,8 @@ namespace NexusForever.WorldServer.Command.Handler
     [Name("Items")]
     public class ItemCommandHandler : CommandCategory
     {
-        public ItemCommandHandler(ILogger<ItemCommandHandler> logger)
-            : base("item", true, logger)
+        public ItemCommandHandler()
+            : base(true, "item")
         {
         }
 

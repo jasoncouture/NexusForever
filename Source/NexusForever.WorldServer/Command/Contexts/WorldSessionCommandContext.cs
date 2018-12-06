@@ -14,9 +14,9 @@ namespace NexusForever.WorldServer.Command.Contexts
         {
         }
 
-        public override Task SendErrorAsync(ILogger logger, string text)
+        public override Task SendErrorAsync(string text)
         {
-            base.SendErrorAsync(logger, text);
+            base.SendErrorAsync(text);
             SendText(text, "Error");
             // TODO: Send player a chat message.
             return Task.CompletedTask;
@@ -36,9 +36,9 @@ namespace NexusForever.WorldServer.Command.Contexts
             }
         }
 
-        public override Task SendMessageAsync(ILogger logger, string text)
+        public override Task SendMessageAsync(string text)
         {
-            base.SendMessageAsync(logger, text);
+            base.SendMessageAsync(text);
             SendText(text);
             return Task.CompletedTask;
         }

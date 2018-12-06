@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using NexusForever.WorldServer.Network;
+using NLog;
 
 namespace NexusForever.WorldServer.Command.Contexts
 {
     public abstract class CommandContext
     {
+        protected ILogger Logger { get; } = LogManager.GetCurrentClassLogger();
         public WorldSession Session { get; set; }
 
         protected CommandContext(WorldSession session)
@@ -13,15 +14,15 @@ namespace NexusForever.WorldServer.Command.Contexts
             Session = session;
         }
 
-        public virtual Task SendErrorAsync(ILogger logger, string text)
+        public virtual Task SendErrorAsync(string text)
         {
-            logger.LogWarning(text);
+            Logger.Warn(text);
             return Task.CompletedTask;
         }
 
-        public virtual Task SendMessageAsync(ILogger logger, string text)
+        public virtual Task SendMessageAsync( string text)
         {
-            logger.LogInformation(text);
+            Logger.Info(text);
             return Task.CompletedTask;
         }
     }

@@ -19,16 +19,11 @@ namespace NexusForever.WorldServer.Command.Handler
 
         public bool RequiresSession { get; }
 
-        protected NamedCommand(IEnumerable<string> commandNames, bool requiresSession, ILogger logger)
-            : base(logger)
+        protected NamedCommand(bool requiresSession, params string[] commandNames)
+            : base()
         {
             CommandNames = commandNames.ToImmutableArray();
             RequiresSession = requiresSession;
-        }
-
-        protected NamedCommand(string commandName, bool requiresSession, ILogger logger)
-            : this(new[] {commandName}, requiresSession, logger)
-        {
         }
 
         public override IEnumerable<string> GetCommands()
@@ -74,7 +69,7 @@ namespace NexusForever.WorldServer.Command.Handler
 
         public virtual Task SendHelpAsync(CommandContext session)
         {
-            return session.SendMessageAsync(Logger, HelpText);
+            return session.SendMessageAsync(HelpText);
         }
     }
 }

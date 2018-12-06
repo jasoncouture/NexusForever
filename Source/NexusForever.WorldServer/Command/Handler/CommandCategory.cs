@@ -17,13 +17,8 @@ namespace NexusForever.WorldServer.Command.Handler
         private readonly ImmutableDictionary<string, SubCommandHandler> subCommands;
         public override string HelpText { get; }
 
-        protected CommandCategory(string categoryName, bool requiresSession, ILogger logger)
-            : this(new[] {categoryName}, requiresSession, logger)
-        {
-        }
-
-        protected CommandCategory(IEnumerable<string> categoryNames, bool requiresSession, ILogger logger)
-            : base(categoryNames, requiresSession, logger)
+        protected CommandCategory(bool requiresSession, params string[] categoryNames)
+            : base(requiresSession, categoryNames)
         {
             var helpBuilder = new StringBuilder();
             helpBuilder.AppendLine("--- sub commands");

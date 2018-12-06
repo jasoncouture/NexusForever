@@ -11,15 +11,15 @@ namespace NexusForever.WorldServer.Command.Handler
 
         public override string HelpText => "Writes the current position of the player as {MapId} {X} {Y} {Z}";
 
-        public LocationCommand(ILogger<LocationCommand> logger)
-            : base(new[] {"location", "loc"}, true, logger)
+        public LocationCommand()
+            : base(true, "location", "loc")
         {
+
         }
 
         protected override async Task HandleCommandAsync(CommandContext context, string command, string[] parameters)
         {
-            await context.SendMessageAsync(Logger,
-                $"{context.Session.Player.Map.Entry.Id} {context.Session.Player.Position.X} {context.Session.Player.Position.Y} {context.Session.Player.Position.Z}");
+            await context.SendMessageAsync($"{context.Session.Player.Map.Entry.Id} {context.Session.Player.Position.X} {context.Session.Player.Position.Y} {context.Session.Player.Position.Z}");
         }
     }
 }

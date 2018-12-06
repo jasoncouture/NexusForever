@@ -11,8 +11,8 @@ namespace NexusForever.WorldServer.Command.Handler
     [Name("Mounts")]
     public class MountCommandHandler : NamedCommand
     {
-        public MountCommandHandler(ILogger<MountCommandHandler> logger)
-            : base("mount", true, logger)
+        public MountCommandHandler()
+            : base(true, "mount")
         {
         }
 

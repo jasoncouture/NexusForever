@@ -1,19 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using NexusForever.WorldServer.Command.Contexts;
+using NLog;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
     public abstract class CommandHandlerBase : ICommandHandler
     {
-        public ILogger Logger { get; }
+        public ILogger Logger { get; } = LogManager.GetCurrentClassLogger();
 
-        protected CommandHandlerBase(ILogger logger)
-        {
-            Logger = logger;
-        }
 
         public abstract int Order { get; }
 

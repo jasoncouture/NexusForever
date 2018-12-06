@@ -13,17 +13,15 @@ namespace NexusForever.WorldServer.Command.Handler
 {
     public class HelpCommandHandler : NamedCommand
     {
-        public IServiceProvider ServiceProvider { get; }
 
-        public HelpCommandHandler(ILogger<HelpCommandHandler> logger, IServiceProvider serviceProvider)
-            : base(new[] {"help", "h", "?"}, false, logger)
+        public HelpCommandHandler()
+            : base(false, "help", "h", "?")
         {
-            ServiceProvider = serviceProvider;
         }
 
         protected override async Task HandleCommandAsync(CommandContext context, string c, string[] parameters)
         {
-            IEnumerable<ICommandHandler> commandHandlers = ServiceProvider.GetServices<ICommandHandler>();
+            IEnumerable<ICommandHandler> commandHandlers = CommandManager.GetCommandHandlers();
             var allCommands = commandHandlers
                 .Where(i => i.GetType() != GetType())
                 .SelectMany(i => i.GetCommands()
@@ -48,7 +46,7 @@ namespace NexusForever.WorldServer.Command.Handler
                 }
 
                 stringBuilder.AppendLine("To get more help for an individual command, type help <command>");
-                await context.SendMessageAsync(Logger, stringBuilder.ToString()).ConfigureAwait(false);
+                await context.SendMessageAsync(stringBuilder.ToString()).ConfigureAwait(false);
             }
             else
                 await CommandManager.HandleCommandAsync(context, $"{parameters[0]} help", false).ConfigureAwait(false);

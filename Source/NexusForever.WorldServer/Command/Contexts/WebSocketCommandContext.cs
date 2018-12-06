@@ -19,19 +19,19 @@ namespace NexusForever.WorldServer.Command.Contexts
             Socket = socket;
         }
 
-        public override async Task SendErrorAsync(ILogger logger, string text)
+        public override async Task SendErrorAsync(string text)
         {
-            await base.SendErrorAsync(logger, text);
-            await SendWebSocketMessage(logger, text, "error");
+            await base.SendErrorAsync(text);
+            await SendWebSocketMessage(text, "error");
         }
 
-        public override async Task SendMessageAsync(ILogger logger, string text)
+        public override async Task SendMessageAsync( string text)
         {
-            await base.SendMessageAsync(logger, text);
-            await SendWebSocketMessage(logger, text, "info");
+            await base.SendMessageAsync(text);
+            await SendWebSocketMessage(text, "info");
         }
 
-        private async Task SendWebSocketMessage(ILogger logger, string text, string type)
+        private async Task SendWebSocketMessage(string text, string type)
         {
             if (Socket.State == WebSocketState.Open)
             {
@@ -44,7 +44,7 @@ namespace NexusForever.WorldServer.Command.Contexts
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, "Failed to send {type} message to websocket client, message was: {message}",
+                    Logger.Error(ex, "Failed to send {0} message to websocket client, message was: {1}",
                         type, text);
                 }
             }
