@@ -22,11 +22,11 @@ namespace NexusForever.WorldServer
 {
     internal static class WorldServer
     {
-#if DEBUG
+        #if DEBUG
         private const string Title = "NexusForever: World Server (DEBUG)";
-#else
+        #else
         private const string Title = "NexusForever: World Server (RELEASE)";
-#endif
+        #endif
 
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
@@ -38,7 +38,6 @@ namespace NexusForever.WorldServer
 
 
             ConfigurationManager<WorldServerConfiguration>.Initialise("WorldServer.json");
-            log.Info("Initialising...");
             DatabaseManager.Initialise(ConfigurationManager<WorldServerConfiguration>.Config.Database);
 
             GameTableManager.Initialise();
@@ -58,6 +57,7 @@ namespace NexusForever.WorldServer
                 NetworkManager<WorldSession>.Update(lastTick);
                 MapManager.Update(lastTick);
             });
+
             using (WorldServerEmbeddedWebServer.Initialise())
             {
                 log.Info("Ready!");
