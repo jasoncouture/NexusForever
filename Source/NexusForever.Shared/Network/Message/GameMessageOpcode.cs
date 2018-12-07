@@ -12,6 +12,7 @@
         ServerChangeWorld               = 0x00AD,
         ClientVendorPurchase            = 0x00BE,
         ClientCharacterLogout           = 0x00BF,
+        ClientLogout                    = 0x00C0,
         ServerCharacterCreate           = 0x00DC,
         Server00F1                      = 0x00F1,
         Server0104                      = 0x0104, // Galactic Archive
@@ -58,6 +59,7 @@
         ClientHelloRealm                = 0x058F,
         ServerAuthAccepted              = 0x0591,
         ClientHelloAuth                 = 0x0592,
+        ServerClientLogout              = 0x0594,
         Server0636                      = 0x0636,
         ClientEntityCommand             = 0x0637, // bidirectional? packet has both read and write handlers 
         ServerEntityCommand             = 0x0638, // bidirectional? packet has both read and write handlers
