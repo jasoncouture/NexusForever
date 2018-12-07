@@ -21,7 +21,7 @@ namespace NexusForever.Shared.Configuration
 
             MigrateDatabaseConfiguration(file);
 
-            var builder = new ConfigurationBuilder();
+            ConfigurationBuilder builder = new ConfigurationBuilder();
 
             builder
                 .AddJsonFile(file, false, true)
