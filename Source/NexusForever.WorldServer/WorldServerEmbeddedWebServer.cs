@@ -23,7 +23,7 @@ namespace NexusForever.WorldServer
             .ConfigureLogging(logging =>
             {
                 logging.ClearProviders();
-                logging.SetMinimumLevel(LogLevel.Trace);
+                logging.SetMinimumLevel(LogLevel.Information);
             })
             .UseNLog()
             .UseUrls($"http://localhost:5000")

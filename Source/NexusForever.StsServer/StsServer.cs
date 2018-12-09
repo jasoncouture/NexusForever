@@ -6,6 +6,7 @@ using NexusForever.Shared;
 using NexusForever.Shared.Configuration;
 using NexusForever.Shared.Database;
 using NexusForever.Shared.Network;
+using NexusForever.StsServer.Api;
 using NexusForever.StsServer.Network;
 using NexusForever.StsServer.Network.Message;
 
@@ -40,6 +41,7 @@ namespace NexusForever.StsServer
             });
 
             log.Info("Ready!");
+            ApiStartup.Run(SharedConfiguration.Configuration);
         }
     }
 }

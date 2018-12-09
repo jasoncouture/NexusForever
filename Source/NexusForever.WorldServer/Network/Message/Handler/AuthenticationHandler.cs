@@ -1,4 +1,8 @@
-﻿using NexusForever.Shared.Database.Auth;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using NexusForever.Shared;
+using NexusForever.Shared.Database.Auth;
+using NexusForever.Shared.Database.Auth.Client;
 using NexusForever.Shared.Database.Auth.Model;
 using NexusForever.Shared.Game.Events;
 using NexusForever.Shared.Network;
@@ -9,13 +13,25 @@ namespace NexusForever.WorldServer.Network.Message.Handler
 {
     public static class AuthenticationHandler
     {
+        private static async Task<Account> GetAccountAsync(ClientHelloRealm message)
+        {
+            var sessionKey = await AuthClient.Client.GetSessionKeyAsync(message.AccountId);
+            if (sessionKey.ToByteArray().SequenceEqual(message.SessionKey))
+                return new Account
+                {
+                    Email = message.Email.ToLower(),
+                    Id = message.AccountId,
+                };
+            return null;
+        }
+
         [MessageHandler(GameMessageOpcode.ClientHelloRealm)]
         public static void HandleHelloRealm(WorldSession session, ClientHelloRealm helloRealm)
         {
             // prevent packets from being processed until asynchronous account select task is complete
             session.CanProcessPackets = false;
 
-            session.EnqueueEvent(new TaskGenericEvent<Account>(AuthDatabase.GetAccountAsync(helloRealm.Email, helloRealm.SessionKey),
+            session.EnqueueEvent(new TaskGenericEvent<Account>(GetAccountAsync(helloRealm),
                 account =>
             {
                 if (account == null)

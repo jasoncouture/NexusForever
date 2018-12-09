@@ -1,7 +1,10 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using NexusForever.AuthServer.Network.Message.Model;
+using NexusForever.Shared;
 using NexusForever.Shared.Cryptography;
 using NexusForever.Shared.Database.Auth;
+using NexusForever.Shared.Database.Auth.Client;
 using NexusForever.Shared.Database.Auth.Model;
 using NexusForever.Shared.Game;
 using NexusForever.Shared.Game.Events;
@@ -11,12 +14,33 @@ namespace NexusForever.AuthServer.Network.Message.Handler
 {
     public static class AuthenticationHandler
     {
+        private static async Task<Account> GetAccountAsync(ClientHelloAuth auth)
+        {
+            var account = new Account()
+            {
+                Email = auth.Email.ToLower()
+            };
+            try
+            {
+                account.Id = await AuthClient.Client.GetAccountIdByEmail(auth.Email).ConfigureAwait(false);
+                account.GameToken = await AuthClient.Client.GetGameToken(account.Id).ConfigureAwait(false);
+                if (auth.GameToken.Guid.ToByteArray().ToHexString() != account.GameToken) return null;
+                account.SessionKey = await AuthClient.Client.GenerateSessionKeyAsync(account.Id).ConfigureAwait(false);
+            }
+            catch
+            {
+                return null;
+            }
+
+            return account;
+        }
         [MessageHandler(GameMessageOpcode.ClientHelloAuth)]
         public static void HandleHelloAuth(AuthSession session, ClientHelloAuth helloAuth)
         {
-            session.EnqueueEvent(new TaskGenericEvent<Account>(AuthDatabase.GetAccountAsync(helloAuth.Email, helloAuth.GameToken.Guid),
+            session.EnqueueEvent(new TaskGenericEvent<Account>(GetAccountAsync(helloAuth),
                 account =>
             {
+
                 if (account == null)
                 {
                     // TODO: send error
@@ -38,22 +62,16 @@ namespace NexusForever.AuthServer.Network.Message.Handler
                         }
                     }
                 });
-
-                byte[] sessionKey = RandomProvider.GetBytes(16u);
-                session.EnqueueEvent(new TaskEvent(AuthDatabase.UpdateAccountSessionKey(account, sessionKey),
-                    () =>
+                ServerManager.ServerInfo server = ServerManager.Servers.First();
+                session.EnqueueMessageEncrypted(new ServerRealmInfo
                 {
-                    ServerManager.ServerInfo server = ServerManager.Servers.First();
-                    session.EnqueueMessageEncrypted(new ServerRealmInfo
-                    {
-                        AccountId  = account.Id,
-                        SessionKey = sessionKey,
-                        Realm      = server.Model.Name,
-                        Host       = server.Address,
-                        Port       = server.Model.Port,
-                        Type       = server.Model.Type
-                    });
-                }));
+                    AccountId = account.Id,
+                    SessionKey = account.SessionKey.ToByteArray(),
+                    Realm = server.Model.Name,
+                    Host = server.Address,
+                    Port = server.Model.Port,
+                    Type = server.Model.Type
+                });
             }));
         }
     }

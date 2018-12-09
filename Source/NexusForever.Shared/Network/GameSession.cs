@@ -112,6 +112,7 @@ namespace NexusForever.Shared.Network
             outgoingPackets.Clear();
         }
 
+        private double timePassed = 0d;
         public override void Update(double lastTick)
         {
             // process pending packet queue
@@ -131,6 +132,10 @@ namespace NexusForever.Shared.Network
             if (message == null)
             {
                 log.Warn($"Received unknown packet {packet.Opcode:X}");
+                if (((int) packet.Opcode) == 0x23f)
+                {
+                    log.Warn($"{packet.Opcode:X} payload: {packet.Data.ToHexString().ToUpper()}");
+                }
                 return;
             }
 

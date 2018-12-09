@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 using NexusForever.Shared.Database.Auth;
+using NexusForever.Shared.Database.Auth.Client;
 using NexusForever.WorldServer.Command.Attributes;
 using NexusForever.WorldServer.Command.Contexts;
 
@@ -16,7 +19,23 @@ namespace NexusForever.WorldServer.Command.Handler
         [SubCommandHandler("create", "email password - Create a new account")]
         public async Task HandleAccountCreate(CommandContext context, string subCommand, string[] parameters)
         {
-            AuthDatabase.CreateAccount(parameters[0], parameters[1]);
+            try
+            {
+                var id = await AuthClient.Client.CreateAccountAsync(parameters[0], parameters[1], AccountType.User);
+            }
+            catch (AccountAlreadyExistsException)
+            {
+                await context.SendMessageAsync("That account already exists");
+                return;
+            }
+            catch (Exception ex)
+            {
+                await context.SendMessageAsync("An unknown error occured, please try again: " + ex.Message);
+                Logger.Error(ex, "Error creating account");
+                return;
+                // TODO
+            }
+
             await context.SendMessageAsync($"Account {parameters[0]} created successfully")
                 .ConfigureAwait(false);
         }
@@ -24,7 +43,7 @@ namespace NexusForever.WorldServer.Command.Handler
         [SubCommandHandler("delete", "email - Delete an account")]
         public async Task HandleAccountDeleteAsync(CommandContext context, string subCommand, string[] parameters)
         {
-            if (AuthDatabase.DeleteAccount(parameters[0]))
+            if (await AuthClient.Client.DeleteAccountAsync(parameters[0]))
                 await context.SendMessageAsync($"Account {parameters[0]} successfully removed!")
                     .ConfigureAwait(false);
             else
