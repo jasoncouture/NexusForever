@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Net.Http;
 using System.Threading.Tasks;
-using NexusForever.Shared.Database.Auth;
 using NexusForever.Shared.Database.Auth.Client;
 using NexusForever.WorldServer.Command.Attributes;
 using NexusForever.WorldServer.Command.Contexts;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
+
     [Name("Account Management")]
     public class AccountCommandHandler : CommandCategory
     {
@@ -21,7 +20,7 @@ namespace NexusForever.WorldServer.Command.Handler
         {
             try
             {
-                var id = await AuthClient.Client.CreateAccountAsync(parameters[0], parameters[1], AccountType.User);
+                uint id = await AuthClient.Client.CreateAccountAsync(parameters[0], parameters[1], AccountType.User);
             }
             catch (AccountAlreadyExistsException)
             {

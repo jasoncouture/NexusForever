@@ -21,7 +21,8 @@ namespace NexusForever.WorldServer.Command.Handler
                 await context.SendErrorAsync($"Unknown zone: {zoneName}");
             else
             {
-                await context.SendMessageAsync($"Teleporting to {zone.WorldId} {zone.Position0} {zone.Position1} {zone.Position2}");
+                await context.SendMessageAsync(
+                    $"Teleporting to {zone.WorldId} {zone.Position0} {zone.Position1} {zone.Position2}");
                 context.Session.Player.TeleportTo((ushort) zone.WorldId, zone.Position0, zone.Position1,
                     zone.Position2);
             }
