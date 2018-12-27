@@ -28,13 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="WorldServer.example.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Web\Controllers\" />
   </ItemGroup>
+  
+  <Import Project="..\ConfigFiles.targets" />
 
 </Project>

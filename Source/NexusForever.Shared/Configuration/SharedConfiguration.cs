@@ -18,13 +18,21 @@ namespace NexusForever.Shared.Configuration
         {
             if (Configuration != null)
                 return;
-
-            MigrateDatabaseConfiguration(file);
+            bool isDebug = false;
+            #if DEBUG
+            isDebug = true;
+            #endif
+            // Named parameters here to make it clear what's going on.
+            MigrateDatabaseConfiguration(file, optional: isDebug);
+            MigrateDatabaseConfiguration(Path.ChangeExtension(file, ".local.json"), optional: true);
+            MigrateDatabaseConfiguration("global.json", optional: true);
 
             var builder = new ConfigurationBuilder();
 
             builder
-                .AddJsonFile(file, false, true)
+                .AddJsonFile(file, optional: isDebug)
+                .AddJsonFile("global.json", true)
+                .AddJsonFile(Path.ChangeExtension(file, ".local.json"), true)
                 .AddEnvironmentVariables()
                 .AddCommandLine(Environment.GetCommandLineArgs().Skip(1).ToArray());
 
@@ -33,8 +41,14 @@ namespace NexusForever.Shared.Configuration
 
         // The code below this line should be removed after this reaches master for a few releases/weeks.
         // This is only meant to aide people in updating their configs!
-        private static void MigrateDatabaseConfiguration(string file)
+        private static void MigrateDatabaseConfiguration(string file, bool optional = true)
         {
+            if (!File.Exists(file))
+            {
+                if (!optional)
+                    log.Error("File {0} does not exist. Skipping.", file);
+                return;
+            }
             JObject jsonObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(file));
             JToken value = jsonObject.SelectToken("Database.Auth.Host") ??
                            jsonObject.SelectToken("Database.Character.Host") ??

@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using NexusForever.Shared.Configuration;
+using NLog.Extensions.Logging;
 
 namespace NexusForever.Shared
 {
@@ -21,16 +22,31 @@ namespace NexusForever.Shared
 
         public static DbContextOptionsBuilder UseConfiguration(this DbContextOptionsBuilder optionsBuilder, IDatabaseConfiguration databaseConfiguration, DatabaseType databaseType)
         {
-            var connectionString = databaseConfiguration.GetConnectionString(databaseType);
+            IConnectionString connectionString = databaseConfiguration.GetConnectionString(databaseType);
+            string migrationsAssemblyName = GetMigrationAssemblyName(connectionString, databaseType);
             switch (connectionString.Provider)
             {
                 case DatabaseProvider.MySql:
-                    optionsBuilder.UseMySql(connectionString.ConnectionString);
+                    if (connectionString.EnableMigrations)
+                        optionsBuilder.UseMySql(connectionString.ConnectionString, x => x.MigrationsAssembly(migrationsAssemblyName));
+                    else
+                        optionsBuilder.UseMySql(connectionString.ConnectionString);
                     break;
                 default:
                     throw new NotSupportedException($"The requested database provider: {connectionString.Provider:G} is not supported.");
             }
+
+            if (connectionString.Log)
+            {
+                optionsBuilder.UseLoggerFactory(new NLogLoggerFactory());
+            }
+
             return optionsBuilder;
+        }
+
+        private static string GetMigrationAssemblyName(IConnectionString connectionString, DatabaseType databaseType)
+        {
+            return $"NexusForever.Migrations.{connectionString.Provider:G}.{databaseType:G}";
         }
     }
 }

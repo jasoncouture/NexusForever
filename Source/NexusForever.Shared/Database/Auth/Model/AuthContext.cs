@@ -1,8 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using NexusForever.Shared.Configuration;
 
 namespace NexusForever.Shared.Database.Auth.Model
 {
+    public class AuthContextDesignTimeFactory : DesignTimeDbFactory<AuthContext>
+    {
+    }
+
     public partial class AuthContext : DbContext
     {
         public AuthContext()
