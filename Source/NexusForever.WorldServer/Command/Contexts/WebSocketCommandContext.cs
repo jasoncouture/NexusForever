@@ -24,6 +24,12 @@ namespace NexusForever.WorldServer.Command.Contexts
             await SendWebSocketMessage(text, "error");
         }
 
+        public override async Task SendWarningAsync(string text)
+        {
+            await base.SendWarningAsync(text);
+            await SendWebSocketMessage(text, "warn");
+        }
+
         public override async Task SendMessageAsync(string text)
         {
             await base.SendMessageAsync(text);

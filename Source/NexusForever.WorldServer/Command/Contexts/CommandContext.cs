@@ -22,6 +22,12 @@ namespace NexusForever.WorldServer.Command.Contexts
             return Task.CompletedTask;
         }
 
+        public virtual Task SendWarningAsync(string text)
+        {
+            Logger.Warn(text);
+            return Task.CompletedTask;
+        }
+
         public virtual Task SendMessageAsync(string text)
         {
             Logger.Info(text);

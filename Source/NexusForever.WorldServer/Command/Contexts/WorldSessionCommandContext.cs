@@ -17,8 +17,13 @@ namespace NexusForever.WorldServer.Command.Contexts
         {
             base.SendErrorAsync(text);
             SendText(text, "Error");
-            // TODO: Send player a chat message.
             return Task.CompletedTask;
+        }
+
+        public override Task SendWarningAsync(string text)
+        {
+            SendText(text, "Warning");
+            return base.SendWarningAsync(text);
         }
 
         private void SendText(string text, string name = "")
