@@ -15,9 +15,24 @@ namespace NexusForever.WorldServer.Network
     {
         public Account Account { get; set; }
         public List<Character> Characters { get; } = new List<Character>();
-
+        public WorldEntity PlayerTarget { get; set; }
         public Player Player { get; set; }
-
+        public override void Update(double lastTick)
+        {
+            base.Update(lastTick);
+            if(PlayerTarget == null) return;
+            if (Player.Map == null)
+            {
+                PlayerTarget = null;
+                return;
+            }
+            
+            if (Player.Map != null)
+            {
+                if (Player.Map.GetEntity<WorldEntity>(PlayerTarget.Guid) == null)
+                    PlayerTarget = null;
+            }
+        }
         public override void OnAccept(Socket newSocket)
         {
             base.OnAccept(newSocket);

@@ -4,11 +4,20 @@ using NexusForever.WorldServer.Game.Entity;
 using NexusForever.WorldServer.Game.Entity.Network;
 using NexusForever.WorldServer.Game.Entity.Network.Command;
 using NexusForever.WorldServer.Network.Message.Model;
+using NLog;
 
 namespace NexusForever.WorldServer.Network.Message.Handler
 {
     public static class EntityHandler
     {
+        private static ILogger log = LogManager.GetCurrentClassLogger();
+        [MessageHandler(GameMessageOpcode.ClientEntitySelect)]
+        public static void HandleClientEntitySelect(WorldSession session, ClientEntitySelect clientEntitySelect)
+        {
+            session.PlayerTarget = session.Player.Map?.GetEntity<WorldEntity>(clientEntitySelect.Guid);
+            log.Debug(
+                $"Player {session.Player.Guid} is now targeting {(session.PlayerTarget?.Guid.ToString() ?? "<nothing>")}, client requested targeting of guid: {clientEntitySelect.Guid}");
+        }
         [MessageHandler(GameMessageOpcode.ClientEntityCommand)]
         public static void HandleClientEntityCommand(WorldSession session, ClientEntityCommand entityCommand)
         {
